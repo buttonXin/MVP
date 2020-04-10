@@ -36,6 +36,16 @@ open class Presenter<V : LifeCycleProvider>(cls: Class<V>) : MvpPresenter<V> {
     @Suppress("UNCHECKED_CAST")
     protected val view: V
         get() {
+            // 这里注释的原因：
+            // 不应该强引用targetView，我们需要在activity或者Fragment销毁的时候立即释放
+            // 如果写了注释的代码，那么presenter就在类中或者函数里强引用了targetView，就会导致targetView不会被立即释放
+
+//            val v: V? = targetView
+//            if (v != null) {
+//                Log.e("createProxy", "最开始的targetView ！=null ");
+//                return v
+//            }
+            
             var proxy = viewProxy
             if (proxy != null) {
                 return proxy
